@@ -1,0 +1,59 @@
+import sys
+from awsglue.transforms import *
+from awsglue.utils import getResolvedOptions
+from pyspark.context import SparkContext
+from awsglue.context import GlueContext
+from awsglue.job import Job
+ 
+sc = SparkContext.getOrCreate()
+glueContext = GlueContext(sc)
+spark = glueContext.spark_session
+job = Job(glueContext)
+args = getResolvedOptions(sys.argv, ["JOB_NAME"])
+job.init(args["JOB_NAME"], args)
+
+logger = glueContext.get_logger()
+logger.info("info logger initiated")
+logger.warn("warn logger initiated")
+logger.error("error logger initiated")
+ 
+kdf = spark \
+    .readStream \
+    .format('kinesis') \
+    .option('streamName', '${KINESIS_STREAM}') \
+    .option('endpointUrl', 'https://kinesis.${AWS_REGION}.amazonaws.com')\
+    .option('region', '${AWS_REGION}') \
+    .option('startingposition', 'LATEST')\
+    .load()
+ 
+schema = kdf.printSchema()
+logger.info(f"Dataframe Schema: {schema}")
+
+def foreach_batch_function(df, epoch_id):
+    logger.info(f"Dataframe: {df}")
+    logger.info(f"Dataframe tyoe: {type(df)}")
+
+    #df.show(vertical=True, truncate=False)
+    #df.select('sequenceNumber').show(truncate=False)
+    #seqnum_rows = df.select('sequenceNumber').collect()
+    #data_rows = df.select('data').collect()
+
+    #for i in seqnum_rows:
+    #    print(i)
+        
+    #for i in data_rows:
+    #    print(i)
+    
+    logger.info(f"FXTRADE logger: Schema {schema}")
+    data_collect = df.collect()
+    for row in data_collect:
+
+        logger.info(f"""FXTRADER logger: Seqnum: {row["sequenceNumber"]}, TimeStamp: {row["approximateArrivalTimestamp"]} """)
+        logger.info(f"""FXTRADER logger: {row["data"]}""")
+        
+kdf\
+    .writeStream\
+    .option("checkpointLocation", args["TempDir"] + "/checkpoint/spark")\
+    .option("truncate", False)\
+    .foreachBatch(foreach_batch_function)\
+    .start().awaitTermination() 

@@ -1,0 +1,56 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "KinesesPermissions",
+            "Effect": "Allow",
+            "Action": [
+                "kinesis:PutRecord"
+            ],
+            "Resource": [
+                "arn:aws:kinesis:${AWS_REGION}:${AWS_ACCOUNT}:stream/*"
+            ]
+        },
+        {
+            "Sid": "LambdaECRImageRetrievalPolicy",
+            "Effect": "Allow",
+            "Action": [
+              "ecr:BatchGetImage",
+              "ecr:GetDownloadUrlForLayer"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "SQSPermissions",
+            "Effect": "Allow",
+            "Action": "sqs:SendMessage",
+            "Resource": "arn:aws:sqs:*:*:*"
+        },
+        {
+            "Sid": "LambdaXrayPermissions",
+            "Effect" : "Allow",
+            "Action" : [
+                "xray:PutTraceSegments",
+                "xray:PutTelemetryRecords"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "CWLPermissions",
+            "Effect": "Allow",
+            "Action": [
+                "logs:CreateLogStream",
+                "logs:CreateLogGroup",
+                "logs:GetLogEvents",
+                "logs:FilterLogEvents",
+                "logs:PutLogEvents",
+                "logs:GetLogEvents",
+                "logs:PutLogEvents"
+            ],
+            "Resource": [
+              "arn:aws:logs:*:*:log-group:*",
+              "arn:aws:logs:*:*:log-group:*:*:*"
+            ]
+        }
+    ]
+}

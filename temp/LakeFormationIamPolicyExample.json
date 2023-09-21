@@ -1,0 +1,29 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "LakeFormationDataAccessPermissionsForS3",
+            "Effect": "Allow",
+            "Action": [
+                "s3:PutObject",
+                "s3:GetObject",
+                "s3:DeleteObject"
+            ],
+            "Resource": [
+                "arn:aws:s3:::fx-trader-565692740138-us-east-1-bucket/*",
+                "arn:aws:s3:::account-bucket-eu-west-2/*"
+            ]
+        },
+        {
+            "Sid": "LakeFormationDataAccessPermissionsForS3ListBucket",
+            "Effect": "Allow",
+            "Action": [
+                "s3:ListBucket"
+            ],
+            "Resource": [
+                "arn:aws:s3:::fx-trader-565692740138-us-east-1-bucket",
+                "arn:aws:s3:::account-bucket-eu-west-2"
+            ]
+        }
+    ]
+}

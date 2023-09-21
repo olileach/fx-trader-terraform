@@ -1,0 +1,30 @@
+import sys
+from awsglue.transforms import *
+from awsglue.utils import getResolvedOptions
+from pyspark.context import SparkContext
+from awsglue.context import GlueContext
+from awsglue.job import Job
+
+args = getResolvedOptions(sys.argv, ["JOB_NAME"])
+sc = SparkContext()
+glueContext = GlueContext(sc)
+spark = glueContext.spark_session
+job = Job(glueContext)
+job.init(args["JOB_NAME"], args)
+
+trades = glueContext.create_dynamic_frame.from_catalog(
+    database="fx_trader_link",
+    table_name="trades",
+    transformation_ctx="AWSGlueDataCatalog_node1684916913752",
+)
+
+trades.printSchema()
+
+glueContext.write_dynamic_frame.from_catalog(
+    frame=trades,
+    database = "fx_trader_link", 
+    table_name = "trades", 
+    transformation_ctx = "datasource0", 
+)
+
+job.commit()

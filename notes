@@ -1,0 +1,46 @@
+Demo Prep
+-------------------------------------------
+
+1 - Delete Redshift tables
+2 - Delete AWS Glue Cloudwatch logs
+3 - Delete S3 bucket with fx_trade_results data
+4 - Run terraform destroy -auto-approve
+
+
+Demo show and tell
+-------------------------------------------
+
+1 - Walkthrough terraform
+2 - Overview of Lambda Function and Trade Executor
+3 - Overview of Glue table and empty schema
+4 - Overview of Glue Job (start job)
+4 - Overview of Redshift empty table
+5 - Overview of log files - output
+
+
+Quicksight setup
+-------------------------------------------
+
+ - Convert Volume to Integer via dataset
+ - Convert string date to datetime
+    yyyy-MM-dd HH:mm:ss.SSS
+
+
+ - Create a Quicksight Graph
+ - X Axis - timestamp
+ - Value - Volume
+ - Color - Volume
+ - Small Multiples - currency pair
+ - Extend the border down
+ - Publish dashbaord - FX Trade Stats
+
+
+ - Create Parameter (currency pair)
+ - Create Filter (currency pair custom filter using parameter)
+ - Add Control (refresh if needed)
+
+
+ - X Axis - timestamp
+ - Value - Trade Count
+ - Color - Trade Count
+ - Small Multiples - currency pair

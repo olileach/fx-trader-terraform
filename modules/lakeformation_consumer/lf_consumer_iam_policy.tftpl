@@ -1,0 +1,71 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "glue:GetTable",
+                "glue:GetTables",
+                "glue:GetPartition",
+                "glue:GetPartitions",
+                "glue:BatchGetPartition",
+                "glue:GetDatabase",
+                "glue:GetDatabases"
+            ],
+            "Resource": [
+                "arn:aws:glue:${AWS_REGION}:${LAKEFORMATION_ACCOUNT}:table/fx_trades/trades",
+                "arn:aws:glue:${AWS_REGION}:${CONSUMER_ACCOUNT}:table/fx_trades_link/trades",
+                "arn:aws:glue:${AWS_REGION}:${LAKEFORMATION_ACCOUNT}:database/${GLUE_DATABASE}",
+                "arn:aws:glue:${AWS_REGION}:${CONSUMER_ACCOUNT}:database/${GLUE_DATABASE}_link",
+                "arn:aws:glue:${AWS_REGION}:${CONSUMER_ACCOUNT}:catalog",
+                "arn:aws:glue:${AWS_REGION}:${LAKEFORMATION_ACCOUNT}:catalog"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "lakeformation:GetDataAccess"
+            ],
+            "Resource": [
+                "arn:aws:lakeformation:${AWS_REGION}:${CONSUMER_ACCOUNT}:catalog:${LAKEFORMATION_ACCOUNT}"
+            ],
+            "Condition": {
+                "StringEquals": {
+                    "lakeformation:GlueARN": "arn:aws:glue:${AWS_REGION}:${CONSUMER_ACCOUNT}:table/*"
+                }
+            }
+        },
+        {
+            "Action": [
+                "s3:ListBucket"
+            ],
+            "Effect": "Allow",
+            "Resource": [
+                "${BUCKET_ARN}"
+            ]
+        },
+        {
+            "Action": [
+                "s3:DeleteObject",
+                "s3:GetObject",
+                "s3:PutObject"
+            ],
+            "Effect": "Allow",
+            "Resource": [
+                "${BUCKET_ARN}/fx_trader_consumer/*"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+                "logs:DescribeLogStreams"
+            ],
+            "Resource": [
+                "arn:aws:logs:*:*:*"
+            ]
+        }
+    ]
+}
